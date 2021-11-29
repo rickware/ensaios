@@ -143,7 +143,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             <div class="modal-body">
               <div class="form-group">
                 <label>CATEGORIA:</label>
-<?php echo $select_categoria; ?>
+								<?php echo $select_categoria; ?>
               </div>
               <div class="form-group">
                 <label>NOME:</label>
