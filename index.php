@@ -21,16 +21,9 @@ fb($_SESSION['type'], 'Session type', FirePHP::INFO);*/
       <a href="./projeto1/crud_vendas.php">
         <input type="button" value="CRUD - Vendas" />
       </a><br />
-      <a href="./projeto1/relat_vendas.php">
-        <input type="button" value="Relat&oacute;rio - Vendas" />
-      </a><br />
-      <a href="./projeto1/relat_clientes.php">
-        <input type="button" value="Relat&oacute;rio - Clientes" />
-      </a><br />
-      <a href="./projeto1/relat_produtos.php">
-        <input type="button" value="Relat&oacute;rio - Produtos" />
-      </a><br />
-      
+      <a href="./projeto1/relatorios.php">
+        <input type="button" value="Relat&oacute;rios" />
+      </a><br />      
       <br />
     </div>
   </body>

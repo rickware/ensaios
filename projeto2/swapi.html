@@ -107,6 +107,11 @@
     </footer>
 
     <script>
+			/*
+			Number.prototype.toCurrencyString = function(){return this.toFixed(2).replace(/(\d)(?=(\d{3})+\b)/g, '$1 ');}
+			n = 12345678.9;
+			alert(n.toCurrencyString());
+			*/
       function carregar() {
         var planeta = $('#planeta option:selected').val();
         var request = 'https://swapi.dev/api/planets/' + planeta;

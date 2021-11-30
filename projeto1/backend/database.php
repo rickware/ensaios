@@ -1,13 +1,19 @@
 <?php
-require_once('C:/bin/php/includes/firephp-core-master/lib/FirePHPCore/fb.php');
+$path_to_debbuger = 'C:/bin/php/includes/firephp-core-master/lib/FirePHPCore/fb.php';
 $servername = "localhost";
-$username = "serverman";
-$password = "r1cKsn4K3//123//";
-$dbname = "rbmweb";
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
+$username   = "serverman";
+$password   = "r1cKsn4K3//123//";
+$dbname     = "rbmweb";
+
+if (file_exists($path_to_debbuger)) {
+require_once($path_to_debbuger);
+$debug = true;
+} else {
+  $debug = false;
 }
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {die("Conexao ao BD falhou: " . mysqli_connect_error());}
 
 /* formata dados em tabela para o FIREPHP-debugger */
 function totable($param) {
