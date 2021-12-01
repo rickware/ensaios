@@ -3,17 +3,25 @@ ob_start();
 require './backend/database.php';
 fb('start', FIREPHP::INFO);
 
-function monta_select_cliente ($link){
+FILTER_NULL_ON_FAILURE;
+$idcliente = filter_input(INPUT_GET, 'idcliente', FILTER_SANITIZE_NUMBER_INT);
+if (!$idcliente) {$idcliente = 0;}
+
+function monta_select_cliente ($link,$idcliente){
   $resultcli = mysqli_query($link, "select id, nome from clientes");
-  $resposta  = '<select name="selcli" id="selcli" class="form-control" onchange="carregar()">';
+  $resposta  = '<select name="selcli" id="selcli" class="form-control" onchange="carregadadosCliente()">';
   while ($row = mysqli_fetch_assoc($resultcli)){
-    $resposta .= '<option value="'.$row["id"].'">'.$row["nome"].'</option>';
+    $resposta .= '<option value="'.$row["id"];
+    if($row["id"]===$idcliente) {
+      $resposta .= '" selected ';
+    }
+    $resposta .= '">'.$row["nome"].'</option>';
   }
   $resposta .='</select>';
   return $resposta;
 }
 
-$select_cliente = monta_select_cliente ($conn);
+$select_cliente = monta_select_cliente ($conn,$idcliente);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +58,7 @@ $select_cliente = monta_select_cliente ($conn);
                 <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
                 </svg>
               </a>
-              <a href="#novoPedidoModal" class="btn btn-success" data-toggle="modal">
+              <a id="btn-novo" href="#novoPedidoModal" class="btn btn-success" data-toggle="modal">
                 <i class="material-icons"></i> <span>Novo Pedido</span>
               </a>
               <a href="JavaScript:void(0);" class="btn btn-danger" id="delete_multiple">
@@ -81,112 +89,25 @@ $select_cliente = monta_select_cliente ($conn);
         <div class="modal-content">
           <form id="add_form">
             <div class="modal-header">
-              <h4 class="modal-title">Novo Pedido</h4>
+              <h4 class="modal-title">Gerar Novo Pedido</h4>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
 
               <div class="form-group">
-                <label>NOME:</label>
-                <input type="text" id="nome" name="nome" class="form-control" required>
+                <label>CLIENTE:</label>
+                <input type="text" id="nome" name="nome" class="form-control" readonly="true">
+                <input type="hidden" id="idcliente" name="idcliente" class="form-control" required>
               </div>
-              <div class="form-group">
-                <label>UNIDADE:</label>
-                <input type="text" id="unidade" name="unidade" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>PRE&Ccedil;O:</label>
-                <input type="text" id="preco" name="preco" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>ESTOQUE:</label>
-                <input type="text" id="estoque" name="estoque" class="form-control" required>
-              </div>
+              
             </div>
             <div class="modal-footer">
+              <input type="hidden" value="pedido" name="crud">
               <input type="hidden" value="1" name="tipo">
               <input type="button" class="btn btn-default" data-dismiss="modal" value="CANCELAR">
-              <button type="button" class="btn btn-success" id="btn-add">INSERIR</button>
+              <button type="button" class="btn btn-success" id="btn-add">CONFIRMAR</button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Edita HTML -->
-    <div id="editaPedidoModal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <a class="btn btn-default" href="./crud_detalhe.php?idvenda=18"
-               <h4>Editar Pedido</h4></a>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <form id="update_form">
-            
-       <section class="u-clearfix u-section-2" id="sec-057c">
-      <div class="u-clearfix u-sheet u-sheet-1">
-        <div class="u-table u-table-responsive u-table-1">
-          <table class="table table-striped table-hover">
-            <colgroup>
-              <col width="38.7%">
-              <col width="14.3%">
-              <col width="13.2%">
-              <col width="13.8%">
-              <col width="20%">
-            </colgroup>
-            <thead class="u-palette-1-light-2 u-table-header u-table-header-1">
-              <tr style="height: 50px;">
-                <th class="u-border-1 u-border-grey-dark-1 u-table-cell">PRODUTO</th>
-                <th class="u-border-1 u-border-grey-dark-1 u-table-cell">QUANTIDADE</th>
-                <th class="u-border-1 u-border-grey-dark-1 u-table-cell">VALOR</th>
-                <th class="u-border-1 u-border-grey-dark-1 u-table-cell">SUB-TOTAL</th>
-                <th class="u-border-1 u-border-grey-dark-1 u-table-cell">ACAO</th>
-              </tr>
-            </thead>
-            <tbody class="u-table-body">
-              <tr style="height: 50px;">
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">AGUA</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">3</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">5,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">50,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">EDITAR&nbsp; &nbsp;REMOVER</td>
-              </tr>
-              <tr style="height: 50px;">
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">FEIJAO</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">2</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">5,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">10,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell"></td>
-              </tr>
-              <tr style="height: 50px;">
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">ARROZ</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">1</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">10,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">10,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell"></td>
-              </tr>
-              <tr style="height: 50px;">
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">BOLO</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">2</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">15.00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">30,00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell"></td>
-              </tr>
-              <tr style="height: 50px;">
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">SAL</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">1</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">8.00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell">8.00</td>
-                <td class="u-border-1 u-border-grey-dark-1 u-table-cell"></td>
-              </tr>
-            </tbody>
-          </table>
-          </form> 
-        </div>
-      </div>
-    </section>   
-          
         </div>
       </div>
     </div>
@@ -214,42 +135,6 @@ $select_cliente = monta_select_cliente ($conn);
       </div>
     </div>
     
-    <script>   
-      function carregar() {
-        var id_cliente = $("#selcli option:selected").val();
-        var request = './backend/controller.php?acao=carregapedidoscliente&cliente=' + id_cliente;
-
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function () {
-          var result = JSON.parse(this.responseText);
-          if (result.length > 0) {
-            for (i = 0, len = result.length; i < len; i++) {
-              var acaoCell = '<a href="#editaPedidoModal" class="edit" data-toggle="modal">'+
-              '<i class="material-icons update" data-toggle="tooltip"'+
-              'data-id="'+result[i][0]+'"'+
-              'data-produtos="'+result[i][1]+'"'+
-              'data-total="'+result[i][2]+'"'+
-              'title="Editar"></i>'+
-              '</a>'+
-              '<a href="#excluiPedidoModal" class="delete" data-id="'+result[i][0]+'" data-toggle="modal">'+
-              '  <i class="material-icons" data-toggle="tooltip" title="Excluir"></i>'+
-              '</a>';
-
-              var linha = '<tr><td>'+result[i][0]+'</td><td>'+result[i][1]+'</td><td>'+result[i][2]+'</td><td>'+acaoCell+'</td></tr>';
-
-              $('#tabelaPedidos > tbody:last-child').append(linha);
-            }
-          }
-        };
-        xhttp.open("GET", request, true);
-        xhttp.send();
-      }
-
-
-      ;
-    </script>
-
+    <script>var id_cliente = <?php echo $idcliente?>;</script>
   </body>
 </html>
-
-

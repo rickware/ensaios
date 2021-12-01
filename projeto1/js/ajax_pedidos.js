@@ -1,5 +1,10 @@
 var backend = "./backend/controller.php";
 
+$(document).on('click', '#btn-novo', function (e) {
+  $('#nome').val($("#selcli option:selected").text());
+  $('#idcliente').val($("#selcli option:selected").val());
+});
+
 $(document).on('click', '#btn-add', function (e) {
   var data =  serializa($("#add_form")[0]);
   $.ajax({
@@ -9,9 +14,10 @@ $(document).on('click', '#btn-add', function (e) {
     success: function (dataResult) {
       var dataResult = JSON.parse(dataResult);
       if (dataResult.statusCode === 200) {
-        $('#novoProdutoModal').modal('hide');
-        alert('Adicionado com sucesso!');
-        location.reload();
+        var idPedido = dataResult.id;
+        $('#novoPedidoModal').modal('hide');
+        alert('Pedido Aberto, preencha os detalhes');
+        location.href ='./crud_detalhes.php?idcliente='+$("#selcli option:selected").val()+'&idpedido=0&idpedido='+idPedido;
       } else if (dataResult.statusCode === 201) {
         alert(dataResult);
       }
@@ -33,6 +39,33 @@ $(document).on('click', '.update', function (e) {
   $('#preco_u').val(preco);
   $('#valor_u').val(valor);
 });
+
+function carregadadosCliente() {
+	id_cliente = $("#selcli option:selected").val();
+	var request = './backend/controller.php?acao=carregapedidoscliente&idcliente=' + id_cliente;
+	$('#tabelaPedidos > tbody').empty();
+    
+	const xhttp = new XMLHttpRequest();
+    
+	xhttp.onload = function () {
+		var result = JSON.parse(this.responseText);
+		if (result.length > 0) {
+			for (i = 0, len = result.length; i < len; i++) {
+              var id = result[i][0];
+              var acaoCell = '<a href="crud_detalhes.php?idpedido='+id+'&idcliente=' + id_cliente +'" class="edit">'+
+                        '<i class="material-icons update" data-toggle="tooltip" title="Editar"></i></a>'+
+                        '<a href="#excluiPedidoModal" class="delete" data-id="'+id+'" data-toggle="modal">'+
+                        '<i class="material-icons" data-toggle="tooltip" title="Excluir"></i></a>';
+
+              var linha = '<tr><td>'+result[i][0]+'</td><td>'+result[i][1]+'</td><td>'+result[i][2]+'</td><td>'+acaoCell+'</td></tr>';
+
+              $('#tabelaPedidos > tbody').append(linha);
+			}
+		}
+	};
+	xhttp.open("GET", request, true);
+	xhttp.send();
+};
 
 function serializa(form){
   if(!form||form.nodeName!=="FORM"){return;}
@@ -91,30 +124,12 @@ function serializa(form){
   return q.join("&");
 };
 
-$(document).on('click', '#btn-update', function (e) {
-  var form = $("#update_form");
-  var data =  serializa(form[0]);
-  $.ajax({
-    data: data,
-    type: "POST",
-    url: backend,
-    success: function (dataResult) {
-      var dataResult = JSON.parse(dataResult);
-      if (dataResult.statusCode === 200) {
-        $('#editaProdutoModal').modal('hide');
-        alert('Atualizado com sucesso!');
-        location.reload();
-      } else if (dataResult.statusCode === 201) {
-        alert(dataResult);
-      }
-    }
-  });
-});
 $(document).on("click", ".delete", function () {
   var id = $(this).attr("data-id");
   $('#id_d').val(id);
 
 });
+
 $(document).on("click", "#delete", function () {
   $.ajax({
     url: backend,
@@ -126,12 +141,13 @@ $(document).on("click", "#delete", function () {
       id: $("#id_d").val()
     },
     success: function (dataResult) {
-      $('#excluiProdutoModal').modal('hide');
+      $('#excluiPedidoModal').modal('hide');
       $("#" + dataResult).remove();
 
     }
   });
 });
+
 $(document).on("click", "#delete_multiple", function () {
   var user = [];
   $(".cliente_checkbox:checked").each(function () {
@@ -164,9 +180,13 @@ $(document).on("click", "#delete_multiple", function () {
     }
   }
 });
+
 $(document).ready(function () {
+  carregadadosCliente();
+  
   $('[data-toggle="tooltip"]').tooltip();
   var checkbox = $('table tbody input[type="checkbox"]');
+  
   $("#selectAll").click(function () {
     if (this.checked) {
       checkbox.each(function () {

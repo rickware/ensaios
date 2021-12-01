@@ -1,3 +1,5 @@
+/* global id_pedido */
+
 var backend = "./backend/controller.php";
 
 $(document).on('click', '#btn-add', function (e) {
@@ -9,7 +11,7 @@ $(document).on('click', '#btn-add', function (e) {
     success: function (dataResult) {
       var dataResult = JSON.parse(dataResult);
       if (dataResult.statusCode === 200) {
-        $('#novoProdutoModal').modal('hide');
+        $('#novoDetalheModal').modal('hide');
         alert('Adicionado com sucesso!');
         location.reload();
       } else if (dataResult.statusCode === 201) {
@@ -20,18 +22,12 @@ $(document).on('click', '#btn-add', function (e) {
 });
 
 $(document).on('click', '.update', function (e) {
-  var id = $(this).attr("data-id");
-  var cat = $(this).attr("data-categoria");
-  var nome = $(this).attr("data-nome");
-  var unidade = $(this).attr("data-unidade");
-  var preco = $(this).attr("data-preco");
-  var estoq = $(this).attr("data-estoque");
+  var id         = $(this).attr("data-id");
+  var produto    = $(this).attr("data-produto");
+  var quantidade = $(this).attr("data-quantidade");
   $('#id_u').val(id);
-  $('#categoria_u').val(cat);
-  $('#nome_u').val(nome);
-  $('#unidade_u').val(unidade);
-  $('#preco_u').val(preco);
-  $('#estoque_u').val(estoq);
+  $('#update_form select').val(produto);
+  $('#quantidade_u').val(quantidade);
 });
 
 function serializa(form){
@@ -98,10 +94,10 @@ $(document).on('click', '#btn-update', function (e) {
     data: data,
     type: "POST",
     url: backend,
-    success: function () {
+    success: function (dataResult) {
       var dataResult = JSON.parse(dataResult);
       if (dataResult.statusCode === 200) {
-        $('#editaProdutoModal').modal('hide');
+        $('#editaDetalheModal').modal('hide');
         alert('Atualizado com sucesso!');
         location.reload();
       } else if (dataResult.statusCode === 201) {
@@ -110,11 +106,13 @@ $(document).on('click', '#btn-update', function (e) {
     }
   });
 });
+
 $(document).on("click", ".delete", function () {
   var id = $(this).attr("data-id");
   $('#id_d').val(id);
 
 });
+
 $(document).on("click", "#delete", function () {
   $.ajax({
     url: backend,
@@ -126,12 +124,13 @@ $(document).on("click", "#delete", function () {
       id: $("#id_d").val()
     },
     success: function (dataResult) {
-      $('#excluiProdutoModal').modal('hide');
+      $('#excluiDetalheModal').modal('hide');
       $("#" + dataResult).remove();
 
     }
   });
 });
+
 $(document).on("click", "#delete_multiple", function () {
   var item = [];
   $(".cliente_checkbox:checked").each(function () {
@@ -164,9 +163,13 @@ $(document).on("click", "#delete_multiple", function () {
     }
   }
 });
+
 $(document).ready(function () {
+  if(id_pedido===0) $('#novoDetalhe').click();
+  
   $('[data-toggle="tooltip"]').tooltip();
   var checkbox = $('table tbody input[type="checkbox"]');
+  
   $("#selectAll").click(function () {
     if (this.checked) {
       checkbox.each(function () {

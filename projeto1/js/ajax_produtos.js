@@ -6,7 +6,7 @@ $(document).on('click', '#btn-add', function (e) {
     data: data,
     type: "post",
     url: backend,
-    success: function (dataResult) {
+    success: function () {
       var dataResult = JSON.parse(dataResult);
       if (dataResult.statusCode === 200) {
         $('#novoProdutoModal').modal('hide');
