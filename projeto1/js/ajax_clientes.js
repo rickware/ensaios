@@ -117,6 +117,7 @@ $(document).on("click", "#delete", function () {
     type: "POST",
     cache: false,
     data: {
+      crud: 'cliente',
       tipo: 3,
       id: $("#id_d").val()
     },
@@ -145,6 +146,7 @@ $(document).on("click", "#delete_multiple", function () {
         url: backend,
         cache: false,
         data: {
+          crud: 'cliente',
           tipo: 4,
           id: selected_values
         },

@@ -2,9 +2,10 @@
 
 FILTER_NULL_ON_FAILURE;
 $origem = filter_input(INPUT_POST, 'crud', FILTER_SANITIZE_STRING); //define a origem
+$acao = filter_input(INPUT_GET, 'acao',FILTER_SANITIZE_STRING);
+include './database.php';
 
 if ($origem) {
-  include './database.php';
   $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
   $operacao = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_NUMBER_INT); // define o tipo de operacao
 
@@ -54,16 +55,17 @@ if ($origem) {
 
     case 'produto':
       $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-      $codigo = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
+      $codigo = filter_input(INPUT_POST, 'codigo', FILTER_SANITIZE_STRING);
       $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
-      $preco = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_NUMBER_FLOAT);
-      $categoria = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
-      $estoque = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_NUMBER_INT);
+      $preco = filter_input(INPUT_POST, 'preco', FILTER_SANITIZE_NUMBER_FLOAT);
+      $unidade = filter_input(INPUT_POST, 'unidade', FILTER_SANITIZE_STRING);
+      $categoria = filter_input(INPUT_POST, 'categoria', FILTER_SANITIZE_STRING);
+      $estoque = filter_input(INPUT_POST, 'estoque', FILTER_SANITIZE_NUMBER_INT);
 
       switch ($operacao) {
         case 1:  //inserir
           $sql = "INSERT INTO produtos (codigo, nome, preco, unidade, categoria, estoque) "
-                  . "VALUES ('$codigo', '$nome', '$preco, '$unidade', '$categoria', '$estoque'); ";
+                  . "VALUES ('$codigo', '$nome', $preco, '$unidade', '$categoria', $estoque); ";
           if (mysqli_query($conn, $sql)) {
             echo json_encode(array("statusCode" => 200));
           } else {
@@ -148,7 +150,8 @@ if ($origem) {
           }
       }
       break;
-          case 'detalhe':
+
+    case 'detalhe':
       $pedido_id = filter_input(INPUT_POST, 'cliente', FILTER_SANITIZE_NUMBER_INT);
       $produto_id = filter_input(INPUT_POST, 'datap', FILTER_SANITIZE_NUMBER_INT);
       $quantidade = filter_input(INPUT_POST, 'datap', FILTER_SANITIZE_NUMBER_FLOAT);
@@ -196,6 +199,36 @@ if ($origem) {
       }
       break;
   }
-  
-  mysqli_close($conn);
 }
+
+if ($acao) {  // get
+  if($acao =='carregapedidoscliente'){
+    $idCliente = filter_input(INPUT_GET, 'cliente', FILTER_SANITIZE_NUMBER_INT);
+    $sql = "select p.id as pedido, count(t.nome) as produtos, 
+      format(sum(t.preco * d.quantidade),2,'de_DE') as valor 
+      from clientes c 
+      inner join pedidos p on p.cliente_id = c.id 
+      inner join pedido_detalhes d on d.pedido_id = p.id 
+      left join produtos t on t.id = d.produto_id 
+      where c.id = $idCliente 
+      group by pedido 
+      order by c.nome, pedido DESC;";
+    $result = mysqli_fetch_all(mysqli_query($conn, $sql));
+    echo json_encode($result);
+  } elseif ($acao =='detalhedopedido') {
+    $idPedido = filter_input(INPUT_GET, 'pedido', FILTER_SANITIZE_NUMBER_INT);
+    $sql = "select p.id as pedido,
+      t.nome as produto,
+      d.quantidade, t.preco,
+      format((t.preco * d.quantidade),2,'de_DE') as valor
+      from clientes c
+      inner join pedidos p on p.cliente_id = c.id
+      inner join pedido_detalhes d on d.pedido_id = $idPedido
+      left join produtos t on t.id = d.produto_id
+      where p.id = 18";
+    $result = mysqli_fetch_all(mysqli_query($conn, $sql)); // pedido produto quantidade preco valor
+    echo json_encode($result);
+  }
+}
+
+mysqli_close($conn);

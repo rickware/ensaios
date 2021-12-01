@@ -48,6 +48,7 @@ if ($debug) {
             <tr>
               <th>ID</th>
               <th>CATEGORIA</th>
+              <th>CÓDIGO</th>
               <th>NOME</th>
               <th>UNIDADE</th>
               <th>PRE&Ccedil;O</th>
@@ -63,6 +64,7 @@ if ($debug) {
               <tr id="<?php echo $row["id"]; ?>">
                 <td><?php echo $row["id"] ?></td>
                 <td><?php echo $row["categoria"]; ?></td>
+                <td><?php echo $row["codigo"]; ?></td>
                 <td><?php echo $row["nome"]; ?></td>
                 <td><?php echo $row["unidade"]; ?></td>
                 <td><?php echo $row["preco"]; ?></td>

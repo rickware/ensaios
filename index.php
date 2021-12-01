@@ -7,7 +7,7 @@ fb($_SESSION['type'], 'Session type', FirePHP::INFO);*/
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RBMWeb - Ricardo Rodrigues</title>
+    <title>RBMWeb - Ricardo</title>
     <link rel="stylesheet" type="text/css" href="projeto1/css/style.css" />
   </head>
   <body>
@@ -18,8 +18,8 @@ fb($_SESSION['type'], 'Session type', FirePHP::INFO);*/
       <a href="./projeto1/crud_produtos.php">
         <input type="button" value="CRUD - Produtos" />
       </a><br />
-      <a href="./projeto1/crud_vendas.php">
-        <input type="button" value="CRUD - Vendas" />
+      <a href="./projeto1/crud_pedidos.php">
+        <input type="button" value="CRUD - Pedidos" />
       </a><br />
       <a href="./projeto1/relatorios.php">
         <input type="button" value="Relat&oacute;rios" />

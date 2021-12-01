@@ -25,13 +25,13 @@ $(document).on('click', '.update', function (e) {
   var nome = $(this).attr("data-nome");
   var unidade = $(this).attr("data-unidade");
   var preco = $(this).attr("data-preco");
-  var estoq = $(this).attr("data-estoque");
+  var valor = $(this).attr("data-valor");
   $('#id_u').val(id);
   $('#categoria_u').val(cat);
   $('#nome_u').val(nome);
   $('#unidade_u').val(unidade);
   $('#preco_u').val(preco);
-  $('#estoque_u').val(estoq);
+  $('#valor_u').val(valor);
 });
 
 function serializa(form){

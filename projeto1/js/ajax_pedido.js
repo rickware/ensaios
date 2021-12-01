@@ -98,7 +98,7 @@ $(document).on('click', '#btn-update', function (e) {
     data: data,
     type: "POST",
     url: backend,
-    success: function (dataResult) {
+    success: function () {
       var dataResult = JSON.parse(dataResult);
       if (dataResult.statusCode === 200) {
         $('#editaProdutoModal').modal('hide');
@@ -121,7 +121,7 @@ $(document).on("click", "#delete", function () {
     type: "POST",
     cache: false,
     data: {
-      crud: 'produto',
+      crud: 'pedido',
       tipo: 3,
       id: $("#id_d").val()
     },
@@ -133,24 +133,24 @@ $(document).on("click", "#delete", function () {
   });
 });
 $(document).on("click", "#delete_multiple", function () {
-  var user = [];
+  var item = [];
   $(".cliente_checkbox:checked").each(function () {
-    user.push($(this).data('user-id'));
+    item.push($(this).data('item-id'));
   });
-  if (user.length <= 0) {
+  if (item.length <= 0) {
     alert("Selecione algum.");
   } else {
     WRN_PROFILE_DELETE = "Está certo que deseja eliminar estes registros? ";
     var checked = confirm(WRN_PROFILE_DELETE);
     if (checked === true) {
-      var selected_values = user.join(",");
+      var selected_values = item.join(",");
       console.log(selected_values);
       $.ajax({
         type: "POST",
         url: backend,
         cache: false,
         data: {
-          crud: 'produto',
+          crud: 'pedido',
           tipo: 4,
           id: selected_values
         },
