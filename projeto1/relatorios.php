@@ -1,6 +1,6 @@
 <?php
-require "./backend/database.php";
-//fb($_SESSION['type'], 'Session type', FirePHP::INFO);
+/* relatorio.php";
+ */
 ?>
 <!DOCTYPE html>
 <html>

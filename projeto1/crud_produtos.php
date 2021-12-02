@@ -42,7 +42,6 @@ $select_categoria = '
   </head>
   <body>
     <div class="container">
-
       <p id="success"></p>
       <div class="table-wrapper">
         <div class="table-title">
@@ -65,69 +64,70 @@ $select_categoria = '
             </div>
           </div>
         </div>
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>
-                <span class="custom-checkbox">
-                  <input type="checkbox" id="selectAll">
-                  <label for="selectAll"></label>
-                </span>
-              </th>
-              <th>ID</th>
-              <th>CATEGORIA</th>
-              <th>COD</th>
-              <th>NOME</th>
-              <th>UNIDADE</th>
-              <th>PRE&Ccedil;O</th>
-              <th>ESTOQUE</th>
-              <th>AÇÃO</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <?php
-            $result = mysqli_query($conn, 'SELECT * FROM rbmweb.produtos ORDER BY categoria, nome;');
-
-            while ($row = mysqli_fetch_assoc($result)) {
-              //fb($row, FirePHP::DUMP);
-              ?>
-              <tr id="<?php echo $row["id"]; ?>">
-                <td>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>
                   <span class="custom-checkbox">
-                    <input type="checkbox" class="cliente_checkbox" data-user-id="<?php echo $row["id"]; ?>">
-                    <label for="checkbox2"></label>
+                    <input type="checkbox" id="selectAll">
+                    <label for="selectAll"></label>
                   </span>
-                </td>
-                <td><?php echo $row["id"] ?></td>
-                <td><?php echo $row["categoria"]; ?></td>
-                <td><?php echo $row["codigo"]; ?></td>
-                <td><?php echo $row["nome"]; ?></td>
-                <td><?php echo $row["unidade"]; ?></td>
-                <td><?php echo $row["preco"]; ?></td>
-                <td><?php echo $row["estoque"]; ?></td>
-                <td>
-                  <a href="#editaProdutoModal" class="edit" data-toggle="modal">
-                    <i class="material-icons update" data-toggle="tooltip"
-                       data-id="<?php echo $row["id"]; ?>"
-                       data-categoria="<?php echo $row["categoria"]; ?>"
-                       data-nome="<?php echo $row["nome"]; ?>"
-                       data-unidade="<?php echo $row["unidade"]; ?>"
-                       data-preco="<?php echo $row["preco"]; ?>"
-                       data-estoque="<?php echo $row["estoque"]; ?>"
-                       title="Editar"></i>
-                  </a>
-                  <a href="#excluiProdutoModal" class="delete" data-id="<?php echo $row["id"]; ?>" data-toggle="modal">
-                    <i class="material-icons" data-toggle="tooltip" title="Excluir"></i>
-                  </a>
-                </td>
+                </th>
+                <th>ID</th>
+                <th>CATEGORIA</th>
+                <th>COD</th>
+                <th>NOME</th>
+                <th>UNIDADE</th>
+                <th>PRE&Ccedil;O</th>
+                <th>ESTOQUE</th>
+                <th>AÇÃO</th>
               </tr>
-              <?php
-            }
-            ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
 
+              <?php
+              $result = mysqli_query($conn, 'SELECT * FROM rbmweb.produtos ORDER BY categoria, nome;');
+
+              while ($row = mysqli_fetch_assoc($result)) {
+                //fb($row, FirePHP::DUMP);
+                ?>
+                <tr id="<?php echo $row["id"]; ?>">
+                  <td>
+                    <span class="custom-checkbox">
+                      <input type="checkbox" class="cliente_checkbox" data-user-id="<?php echo $row["id"]; ?>">
+                      <label for="checkbox2"></label>
+                    </span>
+                  </td>
+                  <td><?php echo $row["id"] ?></td>
+                  <td><?php echo $row["categoria"]; ?></td>
+                  <td><?php echo $row["codigo"]; ?></td>
+                  <td><?php echo $row["nome"]; ?></td>
+                  <td><?php echo $row["unidade"]; ?></td>
+                  <td><?php echo $row["preco"]; ?></td>
+                  <td><?php echo $row["estoque"]; ?></td>
+                  <td>
+                    <a href="#editaProdutoModal" class="edit" data-toggle="modal">
+                      <i class="material-icons update" data-toggle="tooltip"
+                         data-id="<?php echo $row["id"]; ?>"
+                         data-categoria="<?php echo $row["categoria"]; ?>"
+                         data-nome="<?php echo $row["nome"]; ?>"
+                         data-unidade="<?php echo $row["unidade"]; ?>"
+                         data-preco="<?php echo $row["preco"]; ?>"
+                         data-estoque="<?php echo $row["estoque"]; ?>"
+                         title="Editar"></i>
+                    </a>
+                    <a href="#excluiProdutoModal" class="delete" data-id="<?php echo $row["id"]; ?>" data-toggle="modal">
+                      <i class="material-icons" data-toggle="tooltip" title="Excluir"></i>
+                    </a>
+                  </td>
+                </tr>
+                <?php
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

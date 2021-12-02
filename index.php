@@ -1,8 +1,6 @@
 <?php
-/*require "../db_connect.php";
-require "./verify_librarian.php";
-require "header_librarian.php";
-fb($_SESSION['type'], 'Session type', FirePHP::INFO);*/
+/* require "../db_connect.php";
+  fb($_SESSION['type'], 'Session type', FirePHP::INFO); */
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +21,7 @@ fb($_SESSION['type'], 'Session type', FirePHP::INFO);*/
       </a><br />
       <a href="./projeto1/relatorios.php">
         <input type="button" value="Relat&oacute;rios" />
-      </a><br />      
+      </a><br />
       <br />
     </div>
   </body>
