@@ -7,7 +7,6 @@ if ($params){
   $password   = $params['dbpass'];
   $database   = $params['dbname'];
 }
-$path_to_debbuger = 'C:/bin/php/includes/firephp-core-master/lib/FirePHPCore/fb.php';
 
 if (file_exists($path_to_debbuger)) {
 require_once($path_to_debbuger);
