@@ -2,6 +2,7 @@
 ob_start();
 require './backend/database.php';
 fb('start', FIREPHP::INFO);
+fb($params, 'config',FIREPHP::INFO);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,6 +44,7 @@ fb('start', FIREPHP::INFO);
             </div>
           </div>
         </div>
+       <div class="table-responsive">
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -99,7 +101,7 @@ fb('start', FIREPHP::INFO);
             ?>
           </tbody>
         </table>
-
+        </div>
       </div>
     </div>
 

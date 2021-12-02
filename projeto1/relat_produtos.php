@@ -42,7 +42,7 @@ if ($debug) {
             </div>
           </div>
         </div>
-        <div id="report">
+        <div id="report"  class="table-responsive">
         <table class="table table-striped table-hover">
           <thead>
             <tr>

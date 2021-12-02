@@ -5,23 +5,25 @@ fb('start', FIREPHP::INFO);
 
 FILTER_NULL_ON_FAILURE;
 $idcliente = filter_input(INPUT_GET, 'idcliente', FILTER_SANITIZE_NUMBER_INT);
-if (!$idcliente) {$idcliente = 0;}
+if (!$idcliente) {
+  $idcliente = 0;
+}
 
-function monta_select_cliente ($link,$idcliente){
+function monta_select_cliente($link, $idcliente) {
   $resultcli = mysqli_query($link, "select id, nome from clientes");
-  $resposta  = '<select name="selcli" id="selcli" class="form-control" onchange="carregadadosCliente()">';
-  while ($row = mysqli_fetch_assoc($resultcli)){
-    $resposta .= '<option value="'.$row["id"];
-    if($row["id"]===$idcliente) {
+  $resposta = '<select name="selcli" id="selcli" class="form-control" onchange="carregadadosCliente()">';
+  while ($row = mysqli_fetch_assoc($resultcli)) {
+    $resposta .= '<option value="' . $row["id"];
+    if ($row["id"] === $idcliente) {
       $resposta .= '" selected ';
     }
-    $resposta .= '">'.$row["nome"].'</option>';
+    $resposta .= '">' . $row["nome"] . '</option>';
   }
-  $resposta .='</select>';
+  $resposta .= '</select>';
   return $resposta;
 }
 
-$select_cliente = monta_select_cliente ($conn,$idcliente);
+$select_cliente = monta_select_cliente($conn, $idcliente);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +53,7 @@ $select_cliente = monta_select_cliente ($conn,$idcliente);
             </div>
             <div class="col-sm-6">
               <form id="seleciona_cliente" style="margin-bottom: 5px;">
-                <?php echo $select_cliente; ?>
+<?php echo $select_cliente; ?>
               </form>
               <a href="../index.php" target="_self" title="RETORNAR">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
@@ -67,22 +69,22 @@ $select_cliente = monta_select_cliente ($conn,$idcliente);
             </div>
           </div>
         </div>
-
-        <table class="table table-striped table-hover" id="tabelaPedidos">
-          <thead>
-            <tr>
-              <th>PEDIDO NUMERO</th>
-              <th>QUANTIDADE DE ITENS</th>
-              <th>VALOR DO PEDIDO</th>
-              <th>AÇÃO</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover" id="tabelaPedidos">
+            <thead>
+              <tr>
+                <th>PEDIDO NUMERO</th>
+                <th>QUANTIDADE DE ITENS</th>
+                <th>VALOR DO PEDIDO</th>
+                <th>AÇÃO</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-
     <!-- Modal Novo HTML -->
     <div id="novoPedidoModal" class="modal fade">
       <div class="modal-dialog">
@@ -99,7 +101,7 @@ $select_cliente = monta_select_cliente ($conn,$idcliente);
                 <input type="text" id="nome" name="nome" class="form-control" readonly="true">
                 <input type="hidden" id="idcliente" name="idcliente" class="form-control" required>
               </div>
-              
+
             </div>
             <div class="modal-footer">
               <input type="hidden" value="pedido" name="crud">
@@ -134,7 +136,7 @@ $select_cliente = monta_select_cliente ($conn,$idcliente);
         </div>
       </div>
     </div>
-    
-    <script>var id_cliente = <?php echo $idcliente?>;</script>
+
+    <script>var id_cliente = <?php echo $idcliente ?>;</script>
   </body>
 </html>

@@ -2,28 +2,25 @@
 ob_start();
 require './backend/database.php';
 
-function monta_select_produtos($link){
+function monta_select_produtos($link) {
   $resultcli = mysqli_query($link, "select id, nome from produtos");
-  $resposta  = '<select name="idproduto" id="produto_u" class="form-control">';
-  while ($row = mysqli_fetch_assoc($resultcli)){
-    $resposta .= '<option value="'.$row["id"].'">'.$row["nome"].'</option>';
+  $resposta = '<select name="idproduto" id="produto_u" class="form-control">';
+  while ($row = mysqli_fetch_assoc($resultcli)) {
+    $resposta .= '<option value="' . $row["id"] . '">' . $row["nome"] . '</option>';
   }
-  $resposta .='</select>';
+  $resposta .= '</select>';
   return $resposta;
 }
 
 FILTER_NULL_ON_FAILURE;
 $idCliente = filter_input(INPUT_GET, 'idcliente', FILTER_SANITIZE_NUMBER_INT);
-$idPedido  = filter_input(INPUT_GET, 'idpedido', FILTER_SANITIZE_NUMBER_INT);
+$idPedido = filter_input(INPUT_GET, 'idpedido', FILTER_SANITIZE_NUMBER_INT);
 
-fb($idPedido,FIREPHP::INFO);
-        
-if($idPedido>-1){
+fb($idPedido, FIREPHP::INFO);
+
+if ($idPedido > -1) {
   $select_produtos = monta_select_produtos($conn);
-  
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,10 +45,10 @@ if($idPedido>-1){
         <div class="table-title">
           <div class="row">
             <div class="col-sm-6">
-              <h2>CRUD <b>Itens do Pedido</b>&nbsp;<?php echo $idPedido?></h2>
+              <h2>CRUD <b>Itens do Pedido</b>&nbsp;<?php echo $idPedido ?></h2>
             </div>
             <div class="col-sm-6">
-              <a href="./crud_pedidos.php?idcliente=<?php echo $idCliente?>" target="_self" title="RETORNAR" >
+              <a href="./crud_pedidos.php?idcliente=<?php echo $idCliente ?>" target="_self" title="RETORNAR" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
                 </svg>
@@ -65,26 +62,27 @@ if($idPedido>-1){
             </div>
           </div>
         </div>
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>
-                <span class="custom-checkbox">
-                  <input type="checkbox" id="selectAll">
-                  <label for="selectAll"></label>
-                </span>
-              </th>
-              <th>PRODUTO</th>
-              <th>QUANTIDADE</th>
-              <th>PRE&Ccedil;O</th>
-              <th>VALOR</th>
-              <th>AÇÃO</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>
+                  <span class="custom-checkbox">
+                    <input type="checkbox" id="selectAll">
+                    <label for="selectAll"></label>
+                  </span>
+                </th>
+                <th>PRODUTO</th>
+                <th>QUANTIDADE</th>
+                <th>PRE&Ccedil;O</th>
+                <th>VALOR</th>
+                <th>AÇÃO</th>
+              </tr>
+            </thead>
+            <tbody>
 
-            <?php
-            $sql = "select p.id as pedido, d.id,
+<?php
+$sql = "select p.id as pedido, d.id,
               t.nome as produto, t.id as idproduto,
               d.quantidade, t.preco,
               format((t.preco * d.quantidade),2,'de_DE') as valor
@@ -93,41 +91,41 @@ if($idPedido>-1){
               inner join pedido_detalhes d on d.pedido_id = p.id
               left join produtos t on t.id = d.produto_id
               where p.id = $idPedido";
-            $result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, $sql);
 
-            while ($row = mysqli_fetch_assoc($result)) {
-              //fb($row, FirePHP::DUMP);
-              ?>
-              <tr id="<?php echo $row['id']; ?>">
-                <td>
-                  <span class="custom-checkbox">
-                    <input type="checkbox" class="cliente_checkbox" data-item-id="<?php echo $row['id']; ?>">
-                    <label for="checkbox2"></label>
-                  </span>
-                </td>
-                <td><?php echo $row["produto"] ?></td>
-                <td><?php echo $row["quantidade"]; ?></td>
-                <td><?php echo $row["preco"]; ?></td>
-                <td><?php echo $row["valor"]; ?></td>
-                <td>
-                  <a href="#editaDetalheModal" class="edit" data-toggle="modal">
-                    <i class="material-icons update" data-toggle="tooltip" 
-                       data-id="<?php echo $row['id']; ?>" 
-                       data-produto="<?php echo $row['idproduto']; ?>" 
-                       data-quantidade="<?php echo $row['quantidade']; ?>" 
-                       title="Editar"></i>
-                  </a>
-                  <a href="#excluiDetalheModal" class="delete" data-id="<?php echo $row['id']; ?>" data-toggle="modal">
-                    <i class="material-icons" data-toggle="tooltip" title="Excluir"></i>
-                  </a>
-                </td>
-              </tr>
-              <?php
-            }
-            ?>
-          </tbody>
-        </table>
-
+while ($row = mysqli_fetch_assoc($result)) {
+  //fb($row, FirePHP::DUMP);
+  ?>
+                <tr id="<?php echo $row['id']; ?>">
+                  <td>
+                    <span class="custom-checkbox">
+                      <input type="checkbox" class="cliente_checkbox" data-item-id="<?php echo $row['id']; ?>">
+                      <label for="checkbox2"></label>
+                    </span>
+                  </td>
+                  <td><?php echo $row["produto"] ?></td>
+                  <td><?php echo $row["quantidade"]; ?></td>
+                  <td><?php echo $row["preco"]; ?></td>
+                  <td><?php echo $row["valor"]; ?></td>
+                  <td>
+                    <a href="#editaDetalheModal" class="edit" data-toggle="modal">
+                      <i class="material-icons update" data-toggle="tooltip" 
+                         data-id="<?php echo $row['id']; ?>" 
+                         data-produto="<?php echo $row['idproduto']; ?>" 
+                         data-quantidade="<?php echo $row['quantidade']; ?>" 
+                         title="Editar"></i>
+                    </a>
+                    <a href="#excluiDetalheModal" class="delete" data-id="<?php echo $row['id']; ?>" data-toggle="modal">
+                      <i class="material-icons" data-toggle="tooltip" title="Excluir"></i>
+                    </a>
+                  </td>
+                </tr>
+  <?php
+}
+?>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -143,7 +141,7 @@ if($idPedido>-1){
             <div class="modal-body">
               <div class="form-group">
                 <label>Produto:</label>
-                <?php echo $select_produtos; ?>
+<?php echo $select_produtos; ?>
               </div>
               <div class="form-group">
                 <label>Quantidade:</label>
@@ -153,7 +151,7 @@ if($idPedido>-1){
             <div class="modal-footer">
               <input type="hidden" name="crud" value="detalhe">
               <input type="hidden" name="tipo" value="1">
-              <input type="hidden" name="idpedido" value="<?php echo $idPedido?>">
+              <input type="hidden" name="idpedido" value="<?php echo $idPedido ?>">
               <input type="button" class="btn btn-default" data-dismiss="modal" value="CANCELAR">
               <button type="button" class="btn btn-success" id="btn-add">INSERIR</button>
             </div>
@@ -175,7 +173,7 @@ if($idPedido>-1){
               <input type="hidden" id="id_u" name="iddetalhe" class="form-control" required>
               <div class="form-group">
                 <label>Produtos:</label>
-                <?php echo $select_produtos; ?>
+<?php echo $select_produtos; ?>
               </div>
               <div class="form-group">
                 <label>Quantidade:</label>
@@ -216,7 +214,7 @@ if($idPedido>-1){
         </div>
       </div>
     </div>
-      <script> var id_pedido = <?php echo $idPedido ?>;</script>
+    <script> var id_pedido = <?php echo $idPedido ?>;</script>
   </body>
 </html>
 
