@@ -3,7 +3,7 @@
 FILTER_NULL_ON_FAILURE;
 $crud = filter_input(INPUT_POST, 'crud', FILTER_SANITIZE_STRING); //define a origem oriundas de POST
 $acao = filter_input(INPUT_GET, 'acao',FILTER_SANITIZE_STRING);  // trata requisicoes GET
-include './database.php';
+require './config.php';
 
 if ($crud) {
   $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -17,7 +17,7 @@ if ($crud) {
 
       switch ($operacao) {
         case 1:  //inserir
-          $sql = "INSERT INTO clientes( nome, email,celular) VALUES ('$nome','$email','$celular')";
+          $sql = "INSERT INTO $crud( nome, email,celular) VALUES ('$nome','$email','$celular')";
           if (mysqli_query($conn, $sql)) {
             echo json_encode(array("statusCode" => 200));
           } else {
@@ -26,7 +26,7 @@ if ($crud) {
           break;
 
         case 2: //atualizar
-          $sql = "UPDATE clientes SET nome='$nome',email='$email',celular='$celular' WHERE id=$id";
+          $sql = "UPDATE $crud SET nome='$nome',email='$email',celular='$celular' WHERE id=$id";
           if (mysqli_query($conn, $sql)) {
             echo json_encode(array("statusCode" => 200));
           } else {
@@ -35,7 +35,7 @@ if ($crud) {
           break;
 
         case 3: //remove um registro
-          $sql = "DELETE FROM clientes WHERE id=$id ";
+          $sql = "DELETE FROM $crud WHERE id=$id ";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -44,7 +44,7 @@ if ($crud) {
           break;
 
         case 4: //remove varios
-          $sql = "DELETE FROM clientes WHERE id in ($id)";
+          $sql = "DELETE FROM $crud WHERE id in ($id)";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -64,7 +64,7 @@ if ($crud) {
 
       switch ($operacao) {
         case 1:  //inserir
-          $sql = "INSERT INTO produtos (codigo, nome, preco, unidade, categoria, estoque) "
+          $sql = "INSERT INTO $crud (codigo, nome, preco, unidade, categoria, estoque) "
                   . "VALUES ('$codigo', '$nome', $preco, '$unidade', '$categoria', $estoque); ";
           if (mysqli_query($conn, $sql)) {
             echo json_encode(array("statusCode" => 200));
@@ -74,7 +74,7 @@ if ($crud) {
           break;
 
         case 2: //atualizar
-          $sql = "UPDATE produtos SET "
+          $sql = "UPDATE $crud SET "
                   . "codigo='$codigo',"
                   . "nome='$nome',"
                   . "preco='$preco',"
@@ -90,7 +90,7 @@ if ($crud) {
           break;
 
         case 3: //remove um registro
-          $sql = "DELETE FROM produtos WHERE id=$id ";
+          $sql = "DELETE FROM $crud WHERE id=$id ";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -100,7 +100,7 @@ if ($crud) {
           break;
 
         case 4: //remove varios
-          $sql = "DELETE FROM produtos WHERE id in ($id)";
+          $sql = "DELETE FROM $crud WHERE id in ($id)";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -125,7 +125,7 @@ if ($crud) {
           break;
 
         case 2: //atualizar
-          $sql = "UPDATE pedidos SET cliente_id='$cliente',data_do_pedido='$data_do_pedido' WHERE id=$id,";
+          $sql = "UPDATE $crud SET cliente_id='$cliente',data_do_pedido='$data_do_pedido' WHERE id=$id,";
           if (mysqli_query($conn, $sql)) {
             echo json_encode(array("statusCode" => 200));
           } else {
@@ -134,7 +134,7 @@ if ($crud) {
           break;
 
         case 3: //remove um registro
-          $sql = "DELETE FROM pedidos WHERE id=$id ";
+          $sql = "DELETE FROM $crud WHERE id=$id ";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -143,7 +143,7 @@ if ($crud) {
           break;
 
         case 4: //remove varios
-          $sql = "DELETE FROM pedidos WHERE id in ($id)";
+          $sql = "DELETE FROM $crud WHERE id in ($id)";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -171,7 +171,7 @@ if ($crud) {
 
         case 2: //atualizar
           
-          $sql = "UPDATE pedido_detalhes SET "
+          $sql = "UPDATE $crud SET "
                 . "produto_id=$produto_id,"
                 . "quantidade='$quantidade' "
                 . "WHERE id = $detalhe_id;";
@@ -183,7 +183,7 @@ if ($crud) {
           break;
 
         case 3: //remove um registro
-          $sql = "DELETE FROM pedido_detalhes WHERE id=$id ";
+          $sql = "DELETE FROM $crud WHERE id=$id ";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {
@@ -192,7 +192,7 @@ if ($crud) {
           break;
 
         case 4: //remove varios
-          $sql = "DELETE FROM pedido_detalhes WHERE id in ($id)";
+          $sql = "DELETE FROM $crud WHERE id in ($id)";
           if (mysqli_query($conn, $sql)) {
             echo $id;
           } else {

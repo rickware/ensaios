@@ -1,28 +1,21 @@
 <?php
-$params = parse_ini_file('./backend/config.ini');
-if ($params){
-  $path_to_debbuger = $params['debugPatch'];
-  $servername = $params['dbHost'];
-  $username   = $params['dbUser'];
-  $password   = $params['dbpass'];
-  $database   = $params['dbname'];
-}
-
-if (file_exists($path_to_debbuger)) {
-require_once($path_to_debbuger);
-$debug = true;
-} else {
-  $debug = false;
-}
-
+/*
+ *  database management
+ */
 $conn = mysqli_connect($servername, $username, $password, $database);
 if (!$conn) {die("Conexao ao BD falhou: " . mysqli_connect_error());}
+if($debug){fb($crud, 'rerefer',FIREPHP::INFO);}
+if($debug){fb($order, '$order',FIREPHP::INFO);}
 
-/* formata dados em tabela para o FIREPHP-debugger */
-function totable($param) {
-  $values = mysqli_fetch_all($param,MYSQLI_ASSOC);
-  $keys[0] = array_combine(array_keys($values[0]),array_keys($values[0]));
-  $result = array_merge($keys, $values);  
-  mysqli_data_seek($param, 0);
-  return $result;
+$sql_select = "SELECT * FROM $crud";
+
+if($order) {$sql_select.= " ORDER BY $order;";}
+
+$result = mysqli_query($conn, $sql_select);
+$fieldinfo = mysqli_fetch_fields($result);
+
+foreach ($fieldinfo as $i=>$val) {
+  $titulocampos[$i] = strtoupper(substr($val->name,0)); // util caso a tabela possua campos extra_nomeados tipo: T01_campo
+  if($i==0){ $idt = $val->name;} // refereincia da coluna id (chave primaria) inerente a tabela em uso. Usualmente a primeira coluna
+  $tipocampos[$i] = $val->type;  // array dos tipos [text, int, ...]
 }
